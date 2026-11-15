@@ -1,0 +1,35 @@
+{
+  "name": "shillcraft-pos",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write .",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "db:migrate": "echo \"Phase 2: prisma migrate dev (local only)\" && exit 1",
+    "db:seed": "echo \"Phase 2: seed two test businesses\" && exit 1",
+    "check:rls": "echo \"Phase 2: RLS check\" && exit 1"
+  },
+  "dependencies": {
+    "next": "16.4.6",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.1",
+    "@types/node": "^24.19.2",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.6",
+    "prettier": "^3.10.1",
+    "supabase": "^3.1.0",
+    "typescript": "^5",
+    "vitest": "^5.1.0"
+  }
+}
