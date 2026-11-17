@@ -6,6 +6,22 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: ci_only_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      # Throwaway CI database only. Real credentials never appear in this file.
+      TEST_OWNER_URL: postgresql://postgres:ci_only_password@localhost:5432/postgres
+      DIRECT_URL: postgresql://postgres:ci_only_password@localhost:5432/ci_check
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -15,4 +31,9 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run typecheck
+      - name: Create CI database and apply migrations
+        run: |
+          PGPASSWORD=ci_only_password psql -h localhost -U postgres -c "create database ci_check"
+          npm run db:deploy
+      - run: npm run check:rls
       - run: npm test

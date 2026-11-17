@@ -35,14 +35,14 @@ Prompt
 ## Phase 2: Core and data isolation (weeks 2–5)
 
 Tasks
-- [ ] Prisma schema for all 15 tables in SPEC.md (money in centavos, UTC timestamps, indexes on business_id and foreign keys).
-- [ ] SQL migration: enable **and force** RLS on every table; tenant policies using `current_setting('app.business_id', true)`; create the runtime role (login, no BYPASSRLS, not table owner) with only the grants it needs.
-- [ ] `lib/db`: scoped client that wraps each request's queries in a transaction which first runs `select set_config('app.business_id', $1, true)`, plus the Prisma extension that adds `business_id` to every query.
+- [x] Prisma schema for all 15 tables in SPEC.md (money in centavos, UTC timestamps, indexes on business_id and foreign keys).
+- [x] SQL migration: enable **and force** RLS on every table; tenant policies using `current_setting('app.business_id', true)`; create the runtime role (login, no BYPASSRLS, not table owner) with only the grants it needs.
+- [x] `lib/db`: scoped client that wraps each request's queries in a transaction which first runs `select set_config('app.business_id', $1, true)`, plus the Prisma extension that adds `business_id` to every query.
 - [ ] Two connection strings: pooled (transaction mode) for the app as the runtime role; direct for migrations as the owner.
 - [ ] Supabase Auth login for staff; `lib/auth` maps the session to business, role and location on the server.
 - [ ] Role and location checks on every server action and route.
-- [ ] `npm run check:rls` script + CI step.
-- [ ] Seed: two test businesses with locations, users, menu, stock.
+- [x] `npm run check:rls` script + CI step.
+- [x] Seed: two test businesses with locations, users, menu, stock.
 - [ ] CI deploy pipeline: migrations to staging on merge to main; production on manual approval.
 - [ ] Sentry wired in; uptime check placeholder.
 
