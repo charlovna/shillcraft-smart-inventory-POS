@@ -8,6 +8,9 @@
   "services": [
     { "binding": "WORKER_SELF_REFERENCE", "service": "shillcraft-pos-staging" }
   ],
+  "vars": {
+    "NEXT_PUBLIC_SUPABASE_URL": "https://yhbmkvmmlhtnblswsgup.supabase.co"
+  },
   "hyperdrive": [
     {
       "binding": "HYPERDRIVE",

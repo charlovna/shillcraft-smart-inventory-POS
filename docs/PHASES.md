@@ -39,12 +39,12 @@ Tasks
 - [x] SQL migration: enable **and force** RLS on every table; tenant policies using `current_setting('app.business_id', true)`; create the runtime role (login, no BYPASSRLS, not table owner) with only the grants it needs.
 - [x] `lib/db`: scoped client that wraps each request's queries in a transaction which first runs `select set_config('app.business_id', $1, true)`, plus the Prisma extension that adds `business_id` to every query.
 - [ ] Two connection strings: pooled (transaction mode) for the app as the runtime role; direct for migrations as the owner.
-- [ ] Supabase Auth login for staff; `lib/auth` maps the session to business, role and location on the server.
-- [ ] Role and location checks on every server action and route.
+- [ ] (part done: token verification + session mapping built and tested; login screen waits for the staging publishable key and a test user) Supabase Auth login for staff; `lib/auth` maps the session to business, role and location on the server.
+- [ ] (part done: requireRole/requireLocation built and tested; apply them to each route as routes are added) Role and location checks on every server action and route.
 - [x] `npm run check:rls` script + CI step.
 - [x] Seed: two test businesses with locations, users, menu, stock.
-- [ ] CI deploy pipeline: migrations to staging on merge to main; production on manual approval.
-- [ ] Sentry wired in; uptime check placeholder.
+- [ ] (written in .github/workflows/deploy.yml, untested until secrets and the GitHub production environment exist) CI deploy pipeline: migrations to staging on merge to main; production on manual approval.
+- [ ] (POSTPONED by admin, 2026-11-19) Sentry wired in; uptime check placeholder.
 
 **G2 Isolation tests pass:** automated tests log in as business A and try to read and change business B's data through every route and server action. All must fail.
 **G3 Isolation holds in the database:** tests connect as the runtime role, set `app.business_id` to A, and query B's rows directly. Zero rows; writes rejected. `check:rls` passes. Data API confirmed off on staging and production.

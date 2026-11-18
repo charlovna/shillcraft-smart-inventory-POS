@@ -26,3 +26,4 @@ One line per decision: date, decision, why. Newest last.
 - 2026-11-17: Runtime role app_runtime created without password in migration; stock_movements and order_items are insert-only for it. Password is set outside git.
 - 2026-11-17: Local test database is PostgreSQL 17 on port 54322 (not Docker). Integration tests build a fresh database from the real migrations.
 - 2026-11-17: Runtime app must use its own Hyperdrive config (app_runtime login, query caching OFF); the existing shillcraft-staging config uses postgres and is for migrations or tests only.
+- 2026-11-19: Sentry postponed by admin. Staff tokens are verified server-side against the Supabase project's public signing keys (no secret needed). One phase per fresh agent conversation; a handoff file is written when a phase is complete.
