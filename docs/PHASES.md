@@ -38,8 +38,8 @@ Tasks
 - [x] Prisma schema for all 15 tables in SPEC.md (money in centavos, UTC timestamps, indexes on business_id and foreign keys).
 - [x] SQL migration: enable **and force** RLS on every table; tenant policies using `current_setting('app.business_id', true)`; create the runtime role (login, no BYPASSRLS, not table owner) with only the grants it needs.
 - [x] `lib/db`: scoped client that wraps each request's queries in a transaction which first runs `select set_config('app.business_id', $1, true)`, plus the Prisma extension that adds `business_id` to every query.
-- [ ] Two connection strings: pooled (transaction mode) for the app as the runtime role; direct for migrations as the owner.
-- [ ] (part done: token verification + session mapping built and tested; login screen waits for the staging publishable key and a test user) Supabase Auth login for staff; `lib/auth` maps the session to business, role and location on the server.
+- [x] Two connection strings: pooled (transaction mode) for the app as the runtime role; direct for migrations as the owner.
+- [ ] (part done: token verification, session mapping and the first guarded route GET /api/me, tested; login SCREEN waits for the staging publishable key and a test user) Supabase Auth login for staff; `lib/auth` maps the session to business, role and location on the server.
 - [ ] (part done: requireRole/requireLocation built and tested; apply them to each route as routes are added) Role and location checks on every server action and route.
 - [x] `npm run check:rls` script + CI step.
 - [x] Seed: two test businesses with locations, users, menu, stock.
