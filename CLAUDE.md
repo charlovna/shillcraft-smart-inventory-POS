@@ -87,6 +87,7 @@ Check the current docs for each library before using an API you are unsure of. V
 - Database changes only through Prisma migrations committed to the repo. RLS policies, roles and grants go in SQL migrations too.
 - When a decision is made, add one line to `docs/DECISIONS.md`.
 - **Phase reports:** when a phase ends (all its tasks done, or its gate passed), run the `phase-reporter` subagent (`.claude/agents/phase-reporter.md`) once. It verifies the phase and writes `docs/phase-reports/PHASE-N-REPORT.md` in plain words. It does not run mid-phase and never edits code.
+- **Test validation:** when the admin asks, run the `test-validator` subagent (`.claude/agents/test-validator.md`). It runs lint, typecheck, tests and `check:rls`, audits the tests against the Testing rules, and returns ranked findings. It is read-only and never edits code or tests.
 
 ## Testing rules: tests check the code, and the code checks the tests
 
