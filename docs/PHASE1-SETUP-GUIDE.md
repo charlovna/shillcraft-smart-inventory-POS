@@ -16,12 +16,12 @@ Claude did NOT create any cloud resources. Do these yourself.
 1. supabase.com > New project. Name `shillcraft-staging`, region **Southeast Asia (Singapore)**, save the database password in a password manager.
 2. Repeat for `shillcraft-production`.
 3. In each: Project Settings > Data API > turn **off**.
-4. Do not paste keys into chat or commit them. Keys go in `.env.local` (copy `.env.example`), Vercel and GitHub secrets.
+4. Do not paste keys into chat or commit them. Keys go in `.env.local` (copy `.env.example`), Cloudflare and GitHub secrets (Vercel only at production).
 
-## 3. Vercel
-1. vercel.com > Add New > Project > import the GitHub repo.
-2. Settings > Functions > Function Region = **Singapore (sin1)** (`vercel.json` also pins it).
-3. Check a pull request gets a preview link.
+## 3. Cloudflare (hosting for now; Vercel only at production)
+Do **not** create a Vercel project yet: Vercel hosting applies only at production, once we have acquired clients (see the hosting policy in `CLAUDE.md`).
+1. Create a free Cloudflare account if there is none. Claude Code will give click-by-click steps for the Workers project once the Next.js adapter is confirmed (Phase 1 task in `docs/PHASES.md`).
+2. Check a pull request gets a preview link.
 
 ## 4. Takowaki data (human task)
 Collect menu, stock items and recipes into the CSV templates (templates arrive in Phase 7; start a spreadsheet of products, prices, ingredients and amounts per serving now).

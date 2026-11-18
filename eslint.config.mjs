@@ -10,6 +10,10 @@ const eslintConfig = defineConfig([
     // Default ignores of eslint-config-next:
     ".next/**",
     "out/**",
+    ".open-next/**",
+    ".wrangler/**",
+    "lib/generated/**",
+    "cloudflare-env.d.ts",
     "build/**",
     "next-env.d.ts",
   ]),

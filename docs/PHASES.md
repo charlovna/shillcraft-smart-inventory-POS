@@ -1,5 +1,7 @@
 # Build phases and gates (Blueprint v3.1: 9 phases, 20 weeks, 9 gates)
 
+> **HOSTING POLICY (admin directive, 2026-11-17): Cloudflare now, Vercel only at production.** Until we have acquired clients and go to production, wherever this file says "Vercel" read **Cloudflare Workers Free** (OpenNext adapter, `wrangler`; no `sin1` pin) and "Supabase" as **Supabase Free** (2 projects: staging, production). Vercel hosting (`sin1`) and Supabase Pro apply only at the production move, before Takowaki's production load in Phase 8. See CLAUDE.md. Free-tier caveats: DB pauses after 1 week idle; no backups, so G7 needs an interim `pg_dump` plan until the production move.
+
 Work top to bottom. Each task = one branch + one pull request. **At a gate, stop.** Run its checks, show the human the results, and continue only when they say it passed. Paste the "Prompt" block into Claude Code to start each phase.
 
 | # | Phase | Weeks | Dev-days | Gate(s) at the end |
@@ -21,28 +23,28 @@ Work top to bottom. Each task = one branch + one pull request. **At a gate, stop
 Tasks
 - [x] Repo scaffold: Next.js + TypeScript strict, ESLint, Prettier, Vitest, Playwright, the npm scripts listed in CLAUDE.md.
 - [ ] Local Supabase via the Supabase CLI (`supabase init`, `supabase start`).
-- [x] `.env.example` with every variable name and a comment; real values only in `.env.local` (git-ignored) and in Vercel/GitHub secrets.
+- [x] `.env.example` with every variable name and a comment; real values only in `.env.local` (git-ignored) and in Cloudflare/GitHub secrets (Vercel env vars only at production).
 - [x] GitHub Actions CI (file written; needs GitHub push): install, lint, typecheck, unit tests on every pull request.
-- [ ] Vercel project linked to the repo; Function Region = Singapore (`sin1`); preview deploys on PRs.
-- [ ] Two Supabase projects in **Southeast Asia (Singapore)**: `staging` and `production`. In both: Data API disabled.
+- [ ] Cloudflare Workers project (Free) linked to the repo via OpenNext + wrangler; preview deploys on PRs. (Vercel, `sin1`, comes only at production; do not set it up now.)
+- [ ] Two Supabase **Free** projects in **Southeast Asia (Singapore)**: `staging` and `production`. In both: Data API disabled. Weekly keep-alive so staging is not paused.
 - [ ] Collect Takowaki's menu, stock items and recipes into the CSV templates (human task).
 
 Prompt
-> Read CLAUDE.md, docs/SPEC.md and this Phase 1 section. Explain the plan in plain words, then scaffold the repo step by step. After each step, tell me what to run to check it works. Do not create any cloud resources yourself; give me click-by-click instructions for Vercel, Supabase and GitHub instead.
+> Read CLAUDE.md, docs/SPEC.md and this Phase 1 section. Explain the plan in plain words, then scaffold the repo step by step. After each step, tell me what to run to check it works. Do not create any cloud resources yourself; give me click-by-click instructions for Cloudflare, Supabase and GitHub instead.
 
 ## Phase 2: Core and data isolation (weeks 2–5)
 
 Tasks
-- [ ] Prisma schema for all 15 tables in SPEC.md (money in centavos, UTC timestamps, indexes on business_id and foreign keys).
-- [ ] SQL migration: enable **and force** RLS on every table; tenant policies using `current_setting('app.business_id', true)`; create the runtime role (login, no BYPASSRLS, not table owner) with only the grants it needs.
-- [ ] `lib/db`: scoped client that wraps each request's queries in a transaction which first runs `select set_config('app.business_id', $1, true)`, plus the Prisma extension that adds `business_id` to every query.
+- [x] Prisma schema for all 15 tables in SPEC.md (money in centavos, UTC timestamps, indexes on business_id and foreign keys).
+- [x] SQL migration: enable **and force** RLS on every table; tenant policies using `current_setting('app.business_id', true)`; create the runtime role (login, no BYPASSRLS, not table owner) with only the grants it needs.
+- [x] `lib/db`: scoped client that wraps each request's queries in a transaction which first runs `select set_config('app.business_id', $1, true)`, plus the Prisma extension that adds `business_id` to every query.
 - [ ] Two connection strings: pooled (transaction mode) for the app as the runtime role; direct for migrations as the owner.
-- [ ] Supabase Auth login for staff; `lib/auth` maps the session to business, role and location on the server.
-- [ ] Role and location checks on every server action and route.
-- [ ] `npm run check:rls` script + CI step.
-- [ ] Seed: two test businesses with locations, users, menu, stock.
-- [ ] CI deploy pipeline: migrations to staging on merge to main; production on manual approval.
-- [ ] Sentry wired in; uptime check placeholder.
+- [ ] (part done: token verification + session mapping built and tested; login screen waits for the staging publishable key and a test user) Supabase Auth login for staff; `lib/auth` maps the session to business, role and location on the server.
+- [ ] (part done: requireRole/requireLocation built and tested; apply them to each route as routes are added) Role and location checks on every server action and route.
+- [x] `npm run check:rls` script + CI step.
+- [x] Seed: two test businesses with locations, users, menu, stock.
+- [ ] (written in .github/workflows/deploy.yml, untested until secrets and the GitHub production environment exist) CI deploy pipeline: migrations to staging on merge to main; production on manual approval.
+- [ ] (POSTPONED by admin, 2026-11-19) Sentry wired in; uptime check placeholder.
 
 **G2 Isolation tests pass:** automated tests log in as business A and try to read and change business B's data through every route and server action. All must fail.
 **G3 Isolation holds in the database:** tests connect as the runtime role, set `app.business_id` to A, and query B's rows directly. Zero rows; writes rejected. `check:rls` passes. Data API confirmed off on staging and production.
@@ -121,6 +123,7 @@ Prompt
 ## Phase 8: Takowaki pilot (weeks 18–19)
 
 Tasks (mostly human, with Claude Code fixing issues)
+- [ ] **Production move** (only when a client is acquired and the admin gives the go; before any real client data goes into `production`): upgrade `production` Supabase to Pro, deploy production on Vercel (`sin1`), then the CLAUDE.md Stack and Environments apply as written. Rehearse on staging first.
 - [ ] Write `docs/RUNBOOK-restore.md`: restore whole DB to a new project; restore one business by copying its rows from a restored copy.
 - [ ] Run the restore drill on staging.
 - [ ] Load Takowaki on production; one location live alongside the current method for two weeks; daily stock count check; fixes; cashier training.
